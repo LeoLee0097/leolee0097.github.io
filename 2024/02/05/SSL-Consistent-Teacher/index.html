@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6" />
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <!--将该代码放入博客模板的head中即可-->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  tex2jax: {
+  inlineMath: [['$','$'], ['\\(','\\)']],
+  processEscapes: true
+  }
+  });
+  </script>
+  <!--latex数学显示公式-->
+  <script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <meta name="generator" content="Hexo 7.1.1">
+
+    
+
+        
+
+            
+              <meta name="author" content="Sihao(Leo) Li">
+              
+
+                
+
+                    
+
+                      <title>
+                        
+                          Semi-Supervised Learning Models based on Mean-Teacher | 
+                              BOLG
+                      </title>
+
+                      
+
+                          
+                            <link rel="shortcut icon" href="/favicon.ico">
+                              
+
+                                <!--mathjax latex数学公式显示支持-->
+                                
+                                  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+                                  
+                                    
+
+                                        
+
+                                            
+
+                                                      
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          BOLG
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">Home</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">About</a></li>
+        
+          <li class="navbar-list-item"><a href="/archives">Archives</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">Semi-Supervised Learning Models based on Mean-Teacher</h1>
+          <h2 class="title-sub-wrap">
+            <strong>Sihao(Leo) Li</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2024-02-05T07:02:16.000Z" itemprop="datePublished">2024-02-05</time>
+          </h2>
+          
+            <h2 class="last-time">
+              <span>最后更新于</span>
+              <time  class="article-updated" datetime="2024-02-08T13:05:00.562Z" itemprop="dateUpdated">2024-02-08</time>
+            </h2>
+          
+          
+          <ul class="wrap-list dark">
+  
+    <li><a href="/categories/SSL/">📒 SSL</a></li>
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/SSL/">🏷️ SSL</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+      <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <h2 id="Basic-Information"><a href="#Basic-Information" class="headerlink" title="Basic Information"></a>Basic Information</h2><p>Sotf-Teacher:</p>
+<ul>
+<li><strong>Title</strong>: End-to-End Semi-Supervised Object Detection with Soft Teacher</li>
+<li><strong>Conference</strong>: ICCV2021</li>
+<li><strong>Implementation</strong>: <a target="_blank" rel="noopener" href="https://github.com/microsoft/SoftTeacher">Soft-Teacher</a></li>
+<li><strong>Citation</strong>:   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@article&#123;2021sotf,</span><br><span class="line">title=&#123;End-to-End Semi-Supervised Object Detection with Soft Teacher&#125;,</span><br><span class="line">author=&#123;Xu, Mengde and Zhang, Zheng and Hu, Han and Wang, Jianfeng and Wang, Lijuan and Wei, Fangyun and Bai, Xiang and Liu, Zicheng&#125;,</span><br><span class="line">journal=&#123;Proceedings of the &#123;IEEE/CVF&#125; International Conference on Computer Vision (&#123;ICCV&#125;)&#125;,</span><br><span class="line">year=&#123;2021&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>Consistent-Teacher:</p>
+<ul>
+<li><strong>Title</strong>: Consistent-Teacher: Towards Reducing Inconsistent Pseudo-targets in Semi-supervised Object Detection</li>
+<li><strong>Conference</strong>: CVPR 2023 Spotlight Paper</li>
+<li><strong>Implementation</strong>: <a target="_blank" rel="noopener" href="https://github.com/Adamdad/ConsistentTeacher">Consistent-Teacher</a></li>
+<li><strong>Citation</strong>:   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@article&#123;2023consistent,</span><br><span class="line">author    = &#123;Xinjiang Wang, Xingyi Yang, Shilong Zhang, Yijiang Li, Litong Feng, Shijie Fang, Chengqi Lyu, Kai Chen, Wayne Zhang &#125;,</span><br><span class="line">title     = &#123;Consistent-Teacher: Towards Reducing Inconsistent Pseudo-targets in Semi-supervised Object Detection&#125;,</span><br><span class="line">journal   = &#123;The &#123;IEEE/CVF&#125; Computer Vision and Pattern Recognition Conference (&#123;CVPR&#125;)&#125;,</span><br><span class="line">year      = &#123;2023&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Related-Works-Milestone-on-the-way-to-SSL"><a href="#Related-Works-Milestone-on-the-way-to-SSL" class="headerlink" title="Related Works - Milestone on the way to SSL"></a>Related Works - Milestone on the way to SSL</h2><p>Mean-Teacher Model</p>
+<ul>
+<li><strong>Title</strong>: Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results</li>
+<li><strong>Conference</strong>: NIPS 2017</li>
+<li><strong>Implementation</strong>: <a target="_blank" rel="noopener" href="https://github.com/CuriousAI/mean-teacher">Mean-Teacher</a><br>半监督学习是一种<em>利用少量有标签数据和大量无标签数据进行训练以提高模型性能的机器学习方法</em>。其中，最广泛的一种模式是<code>Teacher-Student</code>模式。模型训练分为三个步骤：</li>
+</ul>
+<ol>
+<li>利用少量已标注数据对初始模型进行训练，</li>
+<li>使用教师模型对大量未标注数据进行推断，并将推断结果作为伪标签加入训练集，</li>
+<li>期望学生模型能够准确检测这些伪标签，并对增强后的输入样本做出一致的预测。</li>
+</ol>
+<p><img src="/image/SSL-Consistent-Teacher/1707215091735.png" alt="Fig.1"></p>
+<p><code>Mean-Teacher</code>利用有标签数据和无标签数据进行训练，其中<code>Teacher</code>模型生成伪标签，并给<code>Student</code>模型作为监督信号。<code>Teacher</code>模型的参数由是<code>Student</code>模型参数的指数滑动平均<code>Exponential Moving Average</code>得到。相对应，<code>Student</code>模型在进行过增强的未标注样本上进行训练，利用<code>Teacher</code>模型推断得到的伪标签进行监督。通过这种方式，<code>Mean-teacher</code>可以实现多视角一致的自监督训练。</p>
+<p><img src="/image/SSL-Consistent-Teacher/1707215176860.png" alt="Fig.2"></p>
+<p>The ‘Mean-Teacher’ model can be affected by the following three issues:</p>
+<ol>
+<li>Pseudo-labels are inconsistent,</li>
+<li>Pseudo-label with noise,</li>
+<li>Pseudo-label could lead to overfitting.<br>These issues can lead to degraded model performance. Based on Mean-Teacher, the existing methods improve the accuracy of pseudo-labels through various methods, but due to the lack of sufficient labeling data, the problem of poor quality of pseudo-label bounding boxes often occurs in the training process in SSOD problems, which leads to the instability and performance degradation of the model.</li>
+</ol>
+<blockquote>
+<p><code>Mean-Teacher</code>模型的可能会受到以下三个问题的影响：</p>
+<ol>
+<li>伪标签不一致，</li>
+<li>伪标签含噪声，</li>
+<li>伪标签过拟合。</li>
+</ol>
+<p>这些问题都可能会导致模型的性能下降。在 Mean-Teacher 的基础上，现有半监督目标检测方法通过各种方法提高伪标签的准确性，但由于缺乏足够的标注数据，在SSOD问题中，训练过程中常常出现伪标签边界框质量较差的问题，并导致模型的不稳定性和性能的下降。</p>
+</blockquote>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p><img src="/image/SSL-Consistent-Teacher/1707217063641.png" alt="Fig.3"></p>
+<blockquote>
+<p>在SSOD背景下，伪标签的不稳定性带来的问题：</p>
+<ol>
+<li>分配不一致: 当前主流的两阶段（<code>Two-stage</code>）或者单阶段（<code>Single-stage</code>）目标检测网络都使用基于<code>IoU</code>阈值的静态<code>ancho</code>r分配方法，这种方法对于伪标签框中的噪声非常敏感。即使伪标签框中只有微小的噪声，伪标签的不稳定性也会导致<code>anchor</code>分配的不同。</li>
+<li>任务不一致:在主流的半监督目标检测方法中，分类与回归任务的不一致也是导致不稳定性的一个重要原因。为了筛选高质量的伪标签，通常会使用分类置信度作为指标，并设置阈值来筛除低置信度的伪标签框。然而，一个伪标签框的分类置信度好坏并不一定能反映其定位准确度的高低。因此，利用分类置信度进行伪标签筛选的方法会进一步加剧伪标签在训练过程中的不稳定性。</li>
+<li>时序不一致: 固定阈值筛选伪标签的方法同样会导致不一致性。在半监督目标检测中，为了筛选高质量的伪标签进行训练，常常采用一个固定的阈值对分类的置信度进行筛选。然而，这种方法会导致在训练不同阶段的不一致性。在训练初期，由于模型对预测结果不够自信，固定的阈值会导致过少的伪标签框被筛选，而随着模型的不断训练，每张图的伪标签框数量会逐渐增多，直到训练后期过多。</li>
+</ol>
+</blockquote>
+<h2 id="Introduction-of-Soft-Teacher"><a href="#Introduction-of-Soft-Teacher" class="headerlink" title="Introduction of Soft-Teacher"></a>Introduction of Soft-Teacher</h2><p>[1, 2] conduct a multi-stage training schema, with the first stage training an initial detector using labeled data, followed by a pseudo-labeling process for unlabeled data and a re-training step based on the pseudo labeled unannotated data. These multi-stage approaches <em>achieve reasonably good accuracy, however, the final performance is limited by the quality of pseudo labels generated by an initial and probably inaccurate detector trained using a small amount of labeled data</em>.</p>
+<blockquote>
+<ul>
+<li>[1] A simple semi-supervised learning framework for object detection. arXiv:2005.04757, 2020.</li>
+<li>[2] Rethinking pre-training and self-training. NIPS, 2020.</li>
+</ul>
+</blockquote>
+<p><img src="/image/SSL-Consistent-Teacher/1707277975459.png" alt="1707277975459"></p>
+<blockquote>
+<ol>
+<li>教师模型和学生模型是两个完全相同的结构，因为要进行<code>EMA</code>更新，两者都是带有预训练的随机初始化。</li>
+<li>有标签图片采用常规的<code>pipeline</code>流程，利用学生模型进行预测，计算得到有标签的<code>loss</code>，包括分类和回归分支<code>loss</code>。</li>
+<li>参考<code>FixMatch</code>做法，无标签数据会经过强和弱两种不同的<code>augmentation pipeline</code>，其中弱增强线输入到教师模型，而强增强线用于学生模型</li>
+<li>对于弱增强线的图片，经过教师模型推理预测，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/141719585">NMS</a> 后处理可以得到检测结果。前面说过伪框的质量对最终性能影响非常大，需要小心处理，作者采用了高阈值来过滤教师模型的检测结果将其作为强增强线学生模型预测值中分类分支的标签，然而这可能导致许多学习模型预测值中真正的候选框被错误地分配为背景样本。 为了解决这个问题，作者建议使用可靠性度量来加权每个“背景”候选框的损失，而实测发现教师模型产生的背景检测分数可以很好地作为可靠性度量。</li>
+<li>由于分类分支和检测分支预测的不一致性以及任务的不一致性，我们也需要找到一个可靠性指标来反应伪框的可信度，但是观察发现定位精度和前景分值没有很大联系，所以作者采用了另一种方法即通过框抖动<code>box jittering</code>选择可靠的边界框来训练学生模型的定位分支，这种方法首先多次抖动伪前景框候选； 然后在利用教师模型对这些抖动框进行回归(实际上是<code>rcnn</code>分支进一步<code>refine</code>)，并将这些回归框的方差用作可靠性度量；最后将具有足够高可靠性的<code>box</code>候选用于学生定位分支的训练。</li>
+<li>可以看出强增强线学生模型的无标签分类和回归分支的伪标签是不一样的。教师模型采用<code>Mean teachers</code>方法进行更新。学生模型的分类和回归分支的<code>loss</code>由教师模型产生的分类分数加权。这种监督方式实测效果远好于<code>hard</code>标签训练方式，所以它才称为<code>soft teacher</code>。</li>
+</ol>
+</blockquote>
+<p>以上，它主要是提出一个<code>E2E</code>联合学习算法，并提出了两个新的改进：</p>
+<ul>
+<li>soft teacher 机制，其中每个无标记分支预测值的分类损失由教师网络产生的分类分数加权。</li>
+<li>box jittering 机制，用于选择可靠的伪框以进行无标记分支预测值的回归分支框学习。</li>
+</ul>
+<h4 id="Reference-of-this-section"><a href="#Reference-of-this-section" class="headerlink" title="Reference of this section"></a>Reference of this section</h4><ul>
+<li>超实用半监督目标检测 Soft Teacher 及 MMDetection 最强代码实践 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/437754834">ZhiHu_01</a></li>
+</ul>
+<p>Note on Experiment Settings:</p>
+<blockquote>
+<p><em><strong>Fully Labeled Data</strong></em>: In this setting, the entire train2017 is used as the labeled data and unlabeled2017 is used as <em>the additional unlabeled data</em>. <em>This setting is more challenging. Its goal is to use the additional unlabeled data to improve a well-trained detector on large-scale labeled data.</em></p>
+</blockquote>
+<h2 id="Introduction-of-Consistent-Teacher"><a href="#Introduction-of-Consistent-Teacher" class="headerlink" title="Introduction of Consistent-Teacher"></a>Introduction of Consistent-Teacher</h2><p>This study delves into <em>the inconsistency of semi-supervised object detection (<code>SSOD</code>) using pseudo-targets</em>. The study found that the oscillating pseudo-targets can make it hard to train an accurate detector. <em><strong>This is because it introduces noise into the student’s training, which can lead to severe overfitting problems.</strong></em> To address this issue, the study proposes a solution called Consistent-Teacher. </p>
+<p>Consistent-Teacher reduces the inconsistency by:</p>
+<ul>
+<li>Adopting an adaptive anchor assignment (<code>ASA</code>) strategy that substitutes the static Intersection over Union (<code>IoU</code>)-based strategy. This makes the student network resistant to noisy pseudo-bounding boxes. </li>
+<li>Using a 3D feature alignment module (<code>FAM-3D</code>) to calibrate the subtask predictions. The module allows each classification feature to adaptively query the optimal feature vector for the regression task at arbitrary scales and locations.</li>
+<li>A Gaussian Mixture Model (<code>GMM</code>) dynamically revises the score threshold of pseudo-bboxes, stabilizing the number of ground truths early and remedies the unreliable supervision signal during training.</li>
+</ul>
+<blockquote>
+<p>Consistent-Teacher 通过以下方式减少不一致：</p>
+<ul>
+<li>采用自适应锚点分配 （ASA） 策略，取代基于并集 （IoU） 的静态交叉点策略。</li>
+<li>使用 3D 特征对齐模块 （FAM-3D） 校准子任务预测。</li>
+<li>高斯混合模型（GMM）动态修正伪bbox的得分阈值，及早稳定地面实况数量，并修复训练过程中不可靠的监督信号。</li>
+</ul>
+</blockquote>
+<p><img src="/image/SSL-Consistent-Teacher/1707217127776.png" alt="Fig.4"></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2024/02/13/Review-PDF/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Review-PDF</h2>
+        </a>
+      
+      <div class="card-text--row">Newer</div>
+    </div>
+  </article>
+</div>
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2024/02/03/HEXO-Basic/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Hexo Basic</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+    
+      <h2>Leo</h2>
+    
+    
+      <p>烟雨化桥常相念，塞上门楼空许约。</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>24</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        3
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        4
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/BLOG/">
+            BLOG (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/WSN/">
+            WSN (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/SSL/">
+            SSL (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/Hexo/" style="font-size: 10px;" class="tags-cloud-0">Hexo</a> <a href="/tags/Review/" style="font-size: 10px;" class="tags-cloud-0">Review</a> <a href="/tags/SSL/" style="font-size: 10px;" class="tags-cloud-0">SSL</a> <a href="/tags/WSN/" style="font-size: 20px;" class="tags-cloud-10">WSN</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+        <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2024 <a href="/" target="_blank">Sihao(Leo) Li</a></p>
+
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z">
+      </path>
+      <path
+        d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z">
+      </path>
+      <path
+        d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z">
+      </path>
+    </svg>
+  </div>
+
+  
+    <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+<!-- copy button  -->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+
+<!-- https://clipboardjs.com/ -->
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+      
+        <!-- 尾部用户自定义相关内容 -->
+</body>
+
+</html>

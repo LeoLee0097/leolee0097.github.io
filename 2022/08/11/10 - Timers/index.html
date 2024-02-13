@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6" />
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <!--将该代码放入博客模板的head中即可-->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  tex2jax: {
+  inlineMath: [['$','$'], ['\\(','\\)']],
+  processEscapes: true
+  }
+  });
+  </script>
+  <!--latex数学显示公式-->
+  <script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <meta name="generator" content="Hexo 7.1.1">
+
+    
+
+        
+
+            
+              <meta name="author" content="Sihao(Leo) Li">
+              
+
+                
+
+                    
+
+                      <title>
+                        
+                          10 - Timers | 
+                              BOLG
+                      </title>
+
+                      
+
+                          
+                            <link rel="shortcut icon" href="/favicon.ico">
+                              
+
+                                <!--mathjax latex数学公式显示支持-->
+                                
+                                  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+                                  
+                                    
+
+                                        
+
+                                            
+
+                                                      
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          BOLG
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">Home</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">About</a></li>
+        
+          <li class="navbar-list-item"><a href="/archives">Archives</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">10 - Timers</h1>
+          <h2 class="title-sub-wrap">
+            <strong>Sihao(Leo) Li</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-08-11T05:24:01.000Z" itemprop="datePublished">2022-08-11</time>
+          </h2>
+          
+            <h2 class="last-time">
+              <span>最后更新于</span>
+              <time  class="article-updated" datetime="2024-02-03T13:12:37.100Z" itemprop="dateUpdated">2024-02-03</time>
+            </h2>
+          
+          
+          <ul class="wrap-list dark">
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/WSN/">🏷️ WSN</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+      <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <ul>
+<li><a href="#clock-module"><code>Clock Module</code></a><ul>
+<li><a href="#timer-library"><code>Timer Library</code></a></li>
+<li><a href="#stimer-library"><code>Stimer Library</code></a></li>
+<li><a href="#etimer-library"><code>Etimer Library</code></a></li>
+<li><a href="#ctimer-library"><code>Ctimer Library</code></a></li>
+<li><a href="#rtimer-library"><code>Rtimer Library</code></a></li>
+</ul>
+</li>
+</ul>
+<p>We can perform some activities by utilizing timer objects. Contiki-NG has one clock and several timer modules, such as <code>timer</code>, <code>stimer</code>, <code>ctimer</code>, <code>etimer</code>, and <code>rtimer</code>. All these libraries can be found in the <code>&lt;contiki&gt;/os/sys</code> folder.</p>
+<p>Contiki-NG provides a set of timer libraries that are used both by applications and by the OS itself. The timer libraries contain functionality for checking if a time period has passed, waking up the system from low power mode at scheduled times, and real-time tasks scheduling.</p>
+<p>All the timers build on the <code>clock</code> module, in charge of basic system time:</p>
+<ul>
+<li><code>timer</code>: a simple timer, without built-in notification (caller must check if expired). Safe from interrupt.</li>
+<li><code>stimer</code>: same as timer, but in seconds and with significantly longer wrapping period. Safe from interrupt.</li>
+<li><code>etimer</code>: schedules events to Contiki-NG processes. Unsafe from interrupt.</li>
+<li><code>ctimer</code>: schedules calls to a callback function. Unsafe from interrupt.</li>
+<li><code>rtimer</code>: real-time task scheduling, with execution from ISR. Safe from interrupt.</li>
+</ul>
+<h2 id="Clock-Module"><a href="#Clock-Module" class="headerlink" title="Clock Module"></a><code>Clock Module</code></h2><p>The Clock library can be used for doing general activities with time. It is declared in <code>clock.h</code> from the <code>&lt;contiki&gt;/os/sys</code> folder. We can see the content of the <code>clock.h</code> file here:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">clock_time_t</span> <span class="title function_">clock_time</span><span class="params">()</span>;     <span class="comment">// Get the system time.</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">long</span> <span class="title function_">clock_seconds</span><span class="params">()</span>;    <span class="comment">// Get the system time in seconds.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">clock_delay</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> delay)</span>;  <span class="comment">// Delay the CPU.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">clock_wait</span><span class="params">(<span class="type">int</span> delay)</span>;    <span class="comment">// Delay the CPU for a number of clock ticks.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">clock_init</span><span class="params">(<span class="type">void</span>)</span>;      <span class="comment">// Initialize the clock module.</span></span><br><span class="line">CLOCK_SECOND;        <span class="comment">// The number of ticks per second.</span></span><br></pre></td></tr></table></figure>
+
+<p>To use this library, call these functions directly from the program. For instance, we can access a clock time by calling the <code>clock_time()</code> function:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">clock_time_t</span> t = clock_time();</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Timer start: %lu \n&quot;</span>, t);</span><br></pre></td></tr></table></figure>
+
+<p>The system time is specified as the platform dependent type <code>clock_time_t</code> and in most platforms this is a limited unsigned value which wraps around when getting to large. The system time starts from zero at boot. In addition, <code>clock_wait()</code> blocks the CPU for a specified number of clock ticks.</p>
+<h3 id="Timer-Library"><a href="#Timer-Library" class="headerlink" title="Timer Library"></a><code>Timer Library</code></h3><p>The <code>Timer</code> library provides functions for setting, resetting, and restarting timers, and for checking if a timer has expired. A timer is declared as a <code>struct timer</code> and all access to the timer is made by a pointer to the declared timer. This library is found in the <code>timer.h</code> file and defines several functions as follows:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">timer_set</span><span class="params">(<span class="keyword">struct</span> timer *t, <span class="type">clock_time_t</span> interval)</span>;   <span class="comment">// Start the timer.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">timer_reset</span><span class="params">(<span class="keyword">struct</span> timer *t)</span>;         <span class="comment">// Restart the timer from the previous expiration time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">timer_restart</span><span class="params">(<span class="keyword">struct</span> timer *t)</span>;       <span class="comment">// Restart the timer from current time.</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">timer_expired</span><span class="params">(<span class="keyword">struct</span> timer *t)</span>;        <span class="comment">// Check if the timer has expired.</span></span><br><span class="line"><span class="type">clock_time_t</span> <span class="title function_">timer_remaining</span><span class="params">(<span class="keyword">struct</span> timer *t)</span>;      <span class="comment">// Get the time until the timer expires.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>An application must manually check if its timers have expired.</strong> To use the Timer library, we call <code>timer_set()</code>. Then, we can verify an expired timer by calling the <code>timer_expired()</code> function:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">timer_set(&amp;timer_timer, <span class="number">3</span> * CLOCK_SECOND);</span><br><span class="line"><span class="keyword">if</span>(timer_expired(&amp;timer_timer))&#123;</span><br><span class="line"> t = clock_time();</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;timer expired: %lu \n&quot;</span>, t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>A timer is always initialized by a call to <code>timer_set()</code> which sets the timer to expire the specified delay from current time and also stores the time interval. All the other function operate on this delay. The following example shows how a timer can be used to detect timeouts in an interrupt.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;sys/timer.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">timer</span> <span class="title">rxtimer</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line"> timer_set(&amp;rxtimer, CLOCK_SECOND / <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interrupt(UART1RX_VECTOR)</span><br><span class="line">uart1_rx_interrupt(<span class="type">void</span>)</span><br><span class="line">&#123;</span><br><span class="line"> <span class="keyword">if</span>(timer_expired(&amp;rxtimer)) </span><br><span class="line"> &#123;</span><br><span class="line">  <span class="comment">/* Timeout */</span></span><br><span class="line">  ...</span><br><span class="line"> &#125;</span><br><span class="line"> timer_restart(&amp;rxtimer);</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Stimer-Library"><a href="#Stimer-Library" class="headerlink" title="Stimer Library"></a><code>Stimer Library</code></h3><p>The Contiki-NG <code>stimer</code> library provides a timer mechanism similar to the timer library but uses time values in seconds, allowing much longer expiration times. The <code>stimer</code> library use <code>clock_seconds()</code> in the clock module to get the current system time in seconds.</p>
+<p>The <code>Stimer</code> library is similar to the timer library, but uses time values in seconds. The following is a list of <code>Stimer</code> functions defined in the <code>stimer.h</code> file.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">stimer_set</span><span class="params">(<span class="keyword">struct</span> stimer *t, <span class="type">unsigned</span> <span class="type">long</span> interval)</span>;    <span class="comment">// Start the timer.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">stimer_reset</span><span class="params">(<span class="keyword">struct</span> stimer *t)</span>;         <span class="comment">// Restart the stimer from the previous expiration time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">stimer_restart</span><span class="params">(<span class="keyword">struct</span> stimer *t)</span>;         <span class="comment">// Restart the stimer from current time.</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">stimer_expired</span><span class="params">(<span class="keyword">struct</span> stimer *t)</span>;         <span class="comment">// Check if the stimer has expired.</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">long</span> <span class="title function_">stimer_remaining</span><span class="params">(<span class="keyword">struct</span> stimer *t)</span>;      <span class="comment">// Get the time until the timer expires.</span></span><br></pre></td></tr></table></figure>
+
+<p>We can use the <code>Stimer</code> library with the same approach as the timer library. We set a time by calling <code>stimer_set()</code>. Then, we check for an expired timer using the <code>stimer_expired()</code> function:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">stimer_set(&amp;stimer_timer, <span class="number">3</span>);</span><br><span class="line"><span class="keyword">if</span>(stimer_expired(&amp;stimer_timer))&#123;</span><br><span class="line"> t = clock_time();</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;stimer expired: %lu \n&quot;</span>, t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Notice: the <code>stimer</code> cannot add the <code>CLOCK_SECOND</code> !</strong></p>
+<h3 id="Etimer-Library"><a href="#Etimer-Library" class="headerlink" title="Etimer Library"></a><code>Etimer Library</code></h3><p>The <code>Etimer</code> library is an event timer library that generates an event. We can verify this event using <code>PROCESS_WAIT_EVENT_UNTIL()</code>. We can see event timer declarations in the <code>etimer.h</code> file:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">etimer_set</span><span class="params">(<span class="keyword">struct</span> etimer *t, <span class="type">clock_time_t</span> interval)</span>;    <span class="comment">// Start the timer.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">etimer_reset</span><span class="params">(<span class="keyword">struct</span> etimer *t)</span>;         <span class="comment">// Restart the timer from the previous expiration time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">etimer_restart</span><span class="params">(<span class="keyword">struct</span> etimer *t)</span>;         <span class="comment">// Restart the timer from current time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">etimer_stop</span><span class="params">(<span class="keyword">struct</span> etimer *t)</span>;         <span class="comment">// Stop the timer.</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">etimer_expired</span><span class="params">(<span class="keyword">struct</span> etimer *t)</span>;         <span class="comment">// Check if the timer has expired.</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">etimer_pending</span><span class="params">()</span>;             <span class="comment">// Check if there are any non-expired event timers.</span></span><br><span class="line"><span class="type">clock_time_t</span> <span class="title function_">etimer_next_expiration_time</span><span class="params">()</span>;       <span class="comment">// Get the next event timer expiration time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">etimer_request_poll</span><span class="params">()</span>;           <span class="comment">// Inform the etimer library that the system clock has changed.</span></span><br></pre></td></tr></table></figure>
+
+<p>For demo purposes, we can call <code>etimer_set()</code> to set our event timer. Then, we wait for the expired event using <code>PROCESS_WAIT_EVENT_UNTIL()</code>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">etimer_set(&amp;etimer_timer, <span class="number">3</span> * CLOCK_SECOND);</span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line"> PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&amp;etimer_timer));</span><br><span class="line"> etimer_reset(&amp;etimer_timer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>An event timer will post the event <code>PROCESS_EVENT_TIMER</code> to the process that set the timer when the event timer expires. The <code>etimer</code> library use clock_time in the clock module to get the current system time. The <code>etimer</code> library use clock_time in the clock module to get the current system time. An event timer is declared as a <code>struct etimer</code> and all access to the event timer is made by a pointer to the declared event timer.</p>
+<p>Note that the timer event is sent to the Contiki-NG process used to schedule the event timer. If an event timer should be scheduled from a callback function or another process, <code>PROCESS_CONTEXT_BEGIN()</code> and <code>PROCESS_CONTEXT_END()</code> can be used to temporary change the process context. The following example shows how an <code>etimer</code> can be used to schedule a process to run once per second.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;sys/etimer.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">PROCESS_THREAD(example_process, ev, data)</span><br><span class="line">&#123;</span><br><span class="line"> <span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">etimer</span> <span class="title">et</span>;</span></span><br><span class="line"> PROCESS_BEGIN();</span><br><span class="line"> <span class="comment">/* Delay 1 second */</span></span><br><span class="line"> etimer_set(&amp;et, CLOCK_SECOND);</span><br><span class="line"> <span class="keyword">while</span>(<span class="number">1</span>) </span><br><span class="line"> &#123;</span><br><span class="line">  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&amp;et));</span><br><span class="line">  <span class="comment">/* Reset the etimer to trig again in 1 second */</span></span><br><span class="line">  etimer_reset(&amp;et);</span><br><span class="line">  ...</span><br><span class="line"> &#125;</span><br><span class="line"> PROCESS_END();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Ctimer-Library"><a href="#Ctimer-Library" class="headerlink" title="Ctimer Library"></a><code>Ctimer Library</code></h3><p>The <code>CTimer</code> library provides a function callback that will be called when timer expiration occurs. <code>CTimer</code> functions are defined in the <code>ctimer.h</code> file:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">ctimer_set</span><span class="params">(<span class="keyword">struct</span> ctimer *c, <span class="type">clock_time_t</span> t, <span class="type">void</span>(*f)(<span class="type">void</span> *), <span class="type">void</span> *ptr)</span>;  <span class="comment">// Start the timer.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">ctimer_reset</span><span class="params">(<span class="keyword">struct</span> ctimer *t)</span>;             <span class="comment">// Restart the timer from the previous expiration time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">ctimer_restart</span><span class="params">(<span class="keyword">struct</span> ctimer *t)</span>;             <span class="comment">// Restart the timer from current time.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">ctimer_stop</span><span class="params">(<span class="keyword">struct</span> ctimer *t)</span>;             <span class="comment">// Stop the timer.</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">ctimer_expired</span><span class="params">(<span class="keyword">struct</span> ctimer *t)</span>;             <span class="comment">// Check if the timer has expired.</span></span><br></pre></td></tr></table></figure>
+
+<p>For this demo, we can define a function, <code>perform_ctime_function()</code>. This function is passed to <code>ctimer_set()</code> when we set the <code>ctimer</code> library:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">perform_ctime_callback</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Process demo_timer3: ctimer callback called\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">ctimer_set(&amp;ctimer_timer, CLOCK_SECOND, perform_ctime_callback, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Rtimer-Library"><a href="#Rtimer-Library" class="headerlink" title="Rtimer Library"></a><code>Rtimer Library</code></h3><p>The <code>Rtimer</code> library provides scheduling and execution for real-time tasks. We can define a specific execution time when we set <code>rtimer</code> using the <code>rtimer_set()</code> function. We can see the <code>rtimer</code> function in<br>the <code>rtimer.h</code> file:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RTIMER_CLOCK_LT(a, b);          <span class="comment">// This should give TRUE if &#x27;a&#x27; is less than &#x27;b&#x27;, otherwise false.</span></span><br><span class="line">RTIMER_ARCH_SECOND;          <span class="comment">// The number of ticks per second.</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">rtimer_arch_init</span><span class="params">(<span class="type">void</span>)</span>;        <span class="comment">// Initialize the rtimer architecture code.</span></span><br><span class="line"><span class="type">rtimer_clock_t</span> <span class="title function_">rtimer_arch_now</span><span class="params">()</span>;       <span class="comment">// Get the current time.</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">rtimer_arch_schedule</span><span class="params">(<span class="type">rtimer_clock_t</span> wakeup_time)</span>;  <span class="comment">// Schedule a call to rtimer_run_next().</span></span><br></pre></td></tr></table></figure>
+
+<p>For implementation, we declare a function that is passed in the <code>rtimer_set()</code> function. We also set the execution time:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">rtimer_clock_t</span> timeout_rtimer = RTIMER_SECOND / <span class="number">2</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">perform_rtime_callback</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;Process demo_timer3: rtimer callback called\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">rtimer_set(&amp;rtimer_timer, RTIMER_NOW() + timeout_rtimer, <span class="number">0</span>, perform_rtime_callback, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/08/12/11%20-%20Communication%20models%20for%20Contiki-NG/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">11 - Communication models for Contiki-NG</h2>
+        </a>
+      
+      <div class="card-text--row">Newer</div>
+    </div>
+  </article>
+</div>
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/08/10/9%20-%20Processes/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">9 - Processes</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+    
+      <h2>Leo</h2>
+    
+    
+      <p>烟雨化桥常相念，塞上门楼空许约。</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>24</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        3
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        4
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/BLOG/">
+            BLOG (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/WSN/">
+            WSN (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/SSL/">
+            SSL (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/Hexo/" style="font-size: 10px;" class="tags-cloud-0">Hexo</a> <a href="/tags/Review/" style="font-size: 10px;" class="tags-cloud-0">Review</a> <a href="/tags/SSL/" style="font-size: 10px;" class="tags-cloud-0">SSL</a> <a href="/tags/WSN/" style="font-size: 20px;" class="tags-cloud-10">WSN</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+        <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2024 <a href="/" target="_blank">Sihao(Leo) Li</a></p>
+
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z">
+      </path>
+      <path
+        d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z">
+      </path>
+      <path
+        d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z">
+      </path>
+    </svg>
+  </div>
+
+  
+    <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+<!-- copy button  -->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+
+<!-- https://clipboardjs.com/ -->
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+      
+        <!-- 尾部用户自定义相关内容 -->
+</body>
+
+</html>

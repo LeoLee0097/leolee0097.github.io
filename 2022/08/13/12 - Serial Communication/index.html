@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6" />
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <!--将该代码放入博客模板的head中即可-->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  tex2jax: {
+  inlineMath: [['$','$'], ['\\(','\\)']],
+  processEscapes: true
+  }
+  });
+  </script>
+  <!--latex数学显示公式-->
+  <script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <meta name="generator" content="Hexo 7.1.1">
+
+    
+
+        
+
+            
+              <meta name="author" content="Sihao(Leo) Li">
+              
+
+                
+
+                    
+
+                      <title>
+                        
+                          12 - Serial Communication | 
+                              BOLG
+                      </title>
+
+                      
+
+                          
+                            <link rel="shortcut icon" href="/favicon.ico">
+                              
+
+                                <!--mathjax latex数学公式显示支持-->
+                                
+                                  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+                                  
+                                    
+
+                                        
+
+                                            
+
+                                                      
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          BOLG
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">Home</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">About</a></li>
+        
+          <li class="navbar-list-item"><a href="/archives">Archives</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">12 - Serial Communication</h1>
+          <h2 class="title-sub-wrap">
+            <strong>Sihao(Leo) Li</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-08-13T05:25:02.000Z" itemprop="datePublished">2022-08-13</time>
+          </h2>
+          
+            <h2 class="last-time">
+              <span>最后更新于</span>
+              <time  class="article-updated" datetime="2024-02-03T13:17:54.188Z" itemprop="dateUpdated">2024-02-03</time>
+            </h2>
+          
+          
+          <ul class="wrap-list dark">
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/WSN/">🏷️ WSN</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+      <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <ul>
+<li><a href="#communication-between-contiki-mote-and-computer">Communication Between Contiki Mote and Computer</a></li>
+<li><a href="#access-contiki-motes-via-serial-communication">Access Contiki Motes via Serial Communication</a></li>
+<li><a href="#contiki-shell-method">Contiki Shell Method</a></li>
+<li><a href="#customizing-contiki-shell">Customizing Contiki Shell</a><ul>
+<li><a href="#custom-contiki-ng-shell">Custom Contiki-NG Shell</a></li>
+</ul>
+</li>
+</ul>
+<p>Serial communication can be defined as a process used to send and receive a bit at a time sequentially. Sometimes serial communication is called UART (Universal Asynchronous Receiver&#x2F;Transmitter). Technically, we already used serial communication when we uploaded Contiki-NG programs to WSN motes. We also communicate with WSN motes via the <code>printf()</code> function. Then, we listen to the messages from <code>printf()</code> using the command <code>make login</code>.</p>
+<p><img src="/PhD/PracticalContikiNG/Fig/Serial.png"></p>
+<p>In hardware implementation, a serial communication needs at least three pin outs. These are <code>Rx</code> (Receiver), <code>Tx</code> (Transmitter), and <code>GND</code> (Ground) pins.</p>
+<h2 id="Communication-Between-Contiki-Mote-and-Computer"><a href="#Communication-Between-Contiki-Mote-and-Computer" class="headerlink" title="Communication Between Contiki Mote and Computer"></a>Communication Between Contiki Mote and Computer</h2><p>This method is useful because we can control our Contiki motes from the computer. Running applications on a computer has benefits, such as interacting with the database server and communicating with the cloud server.</p>
+<p>There are a lot of methods used to communicate between a computer and a Contiki mote. We will focus on two methods: <code>serial communication</code> and <code>shell</code>.</p>
+<h2 id="Access-Contiki-Motes-via-Serial-Communication"><a href="#Access-Contiki-Motes-via-Serial-Communication" class="headerlink" title="Access Contiki Motes via Serial Communication"></a>Access Contiki Motes via Serial Communication</h2><p>Since our WSN motes are attached to the computer through serial communication, we can initiate communication between the computer and a WSN mote. Some application platforms, such as <code>C/C++</code>, <code>Java</code>, <code>Python</code>, <code>C#</code>, and <code>Node.js</code>, provide libraries with which to implement serial communication.\</p>
+<p>Here, we will try to access WSN motes using Python through serial communication. To implement serial communication in <code>Python</code>, we use the <code>pyserial</code> library, which can be found in <a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/pyserial">Pyserial</a>. This library can be installed using pip (in Ubuntu 20.04, using Anaconda, then initialize a new environment and install the library by <code>conda install pyserial</code>).</p>
+<p><img src="/PhD/PracticalContikiNG/Fig/condainstallpyserial.png"></p>
+<p>We can verify if our computer has installed pip or not. We can type this command in Terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> pip</span><br></pre></td></tr></table></figure>
+
+<p>If we don’t get a response, it means our computer is missing the <code>pip</code> program. We can install <code>pip</code> using this command in Terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install python-pip</span><br><span class="line">pip install pyserial</span><br></pre></td></tr></table></figure>
+
+<p>In Ubuntu 20.04, use <code>conda install pip</code>. Make sure our computer is connected to the Internet. Next, we must write a Python program to <strong>listen for incoming messages on a specific serial port</strong>. We should know which serial port is used by the Contiki mote. We need it because we will use it on our program. To find a serial port from the Contiki mote, we can open Terminal and type this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /dev/tty*</span><br></pre></td></tr></table></figure>
+
+<p>We should see a list of connected serial ports available on our computer. Depending on our Contiki mote model, we can verify the port by turning the mote on&#x2F;off so we should which a new attached serial port. For instance, my Contiki mote is detected as <code>/dev/ttyUSB0</code>.</p>
+<p>Now, we will develop the Python program. We will print all incoming data from the serial port to the console. Set the baud rate to <code>115200</code> for the serial-port speed. Create a file, called <code>contiki-viewer.py</code>, and write these complete scripts. Change the <code>PORT</code> value to that for our Contiki-NG mote:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">This program starts by initializing the serial library and activating the serial port of the Contiki-NG mote:</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">PORT = <span class="string">&#x27;/dev/ttyUSB0&#x27;</span></span><br><span class="line">ser = serial.Serial(</span><br><span class="line"> port=PORT,</span><br><span class="line"> baudrate=<span class="number">115200</span>,</span><br><span class="line"> parity=serial.PARITY_NONE,</span><br><span class="line"> stopbits=serial.STOPBITS_ONE,</span><br><span class="line"> bytesize=serial.EIGHTBITS,</span><br><span class="line"> timeout=<span class="number">0</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;connected to: &quot;</span> + ser.portstr)</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">After the serial port is activated, we listen for incoming message from that serial port. We call readline() to read data from the serial port. Once we receive data, we print the data to the console:</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"> line = ser.readline()</span><br><span class="line"> <span class="keyword">if</span> line:</span><br><span class="line">  <span class="built_in">print</span>(line),</span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Last, we close our serial port by calling the close() method.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">ser.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Contiki-Shell-Method"><a href="#Contiki-Shell-Method" class="headerlink" title="Contiki Shell Method"></a>Contiki Shell Method</h2><p>Contiki OS provides a shell API that we can utilize to communicate with internal Contiki-NG motes. We find the shell API in the Contiki source code in <code>&lt;Contiki-root&gt;/apps/shell</code>.</p>
+<p>Contiki shell is very useful. Let’s build and deploy a Contiki application onto a Contiki mote. Then, we want to analyze what is happening inside the Contiki mote. To do this, we can build a custom Contiki shell related to our needs. We call the shell from the Contiki-NG mote and perform our analysis.</p>
+<p>One important thing that we should know is the limitations on Contiki mote storage and resources. Building more Contiki shell API means using more mote resources. Make sure our Contiki shell is optimal for our Contiki mote model.</p>
+<p>For this simple demo, we will use a Contiki sample from the Contiki source code. We can see it at <code>&lt;Contiki-root&gt;examples/example-shell</code>. This program runs for native platforms such as a computer.</p>
+<p>In this demo, the function <code>PROCESS_ THREAD(example_shell_process, ev, data)</code> can be seen as follow:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">PROCESS_THREAD(example_shell_process, ev, data)</span><br><span class="line">&#123;</span><br><span class="line"> PROCESS_BEGIN();</span><br><span class="line"> serial_shell_init();</span><br><span class="line">  shell_base64_init();</span><br><span class="line">  shell_blink_init();</span><br><span class="line">  <span class="comment">/*shell_coffee_init();*/</span></span><br><span class="line">  shell_download_init();</span><br><span class="line">  <span class="comment">/*shell_exec_init();*/</span></span><br><span class="line">  shell_file_init();</span><br><span class="line">  shell_httpd_init();</span><br><span class="line">  shell_irc_init();</span><br><span class="line"> <span class="comment">/* uIP ping */</span></span><br><span class="line">  <span class="comment">/*shell_ping_init();*/</span>  </span><br><span class="line"> shell_power_init();</span><br><span class="line">  <span class="comment">/*shell_profile_init();*/</span></span><br><span class="line">  shell_ps_init();</span><br><span class="line">  <span class="comment">/*shell_reboot_init();*/</span></span><br><span class="line">  shell_rime_debug_init();</span><br><span class="line">  shell_rime_netcmd_init();</span><br><span class="line"> <span class="comment">/* Rime ping */</span> </span><br><span class="line">  shell_rime_ping_init(); </span><br><span class="line"> shell_rime_sendcmd_init();</span><br><span class="line"> shell_rime_sniff_init();</span><br><span class="line">  shell_rime_init();</span><br><span class="line">  <span class="comment">/*shell_rsh_init();*/</span></span><br><span class="line">  shell_run_init();</span><br><span class="line">  shell_sendtest_init();</span><br><span class="line">  <span class="comment">/*shell_sky_init();*/</span></span><br><span class="line">  shell_tcpsend_init();</span><br><span class="line"> shell_text_init();</span><br><span class="line">  shell_time_init();</span><br><span class="line">  shell_udpsend_init();</span><br><span class="line">  shell_vars_init();</span><br><span class="line">  shell_wget_init();</span><br><span class="line">  PROCESS_END();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Each shell API is defined as <code>shell_xxx()</code>. Remarked codes are not supported for native platforms such as a computer.</p>
+<p>Now we can compile and run this program. Open Terminal and navigate to the <code>&lt;Contiki-root&gt;examples/example-shell</code> folder. Then, type these commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make TARGET=native</span><br><span class="line">./example-shell.native</span><br></pre></td></tr></table></figure>
+
+<p>For this demo, we call one of the Contiki shells. To get a list of Contiki shells, we can call the help shell command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Contiki &gt; <span class="built_in">help</span></span><br><span class="line">Contiki &gt; <span class="built_in">echo</span> hello world!</span><br></pre></td></tr></table></figure>
+
+<p>By the aforementioned command, we should get a list of supported shells in the console. Then, we execute <code>echo</code> shell command.</p>
+<p>We have run a Contiki shell on the computer as a native application. Now, we will build a Contiki shell for a Contiki mote. For demo purposes, I will use <code>TelosB</code> hardware that’s type is Sky. We could use a sample program from the Contiki source code. We can find shell-sky at <code>&lt;Contiki-root&gt;examples/shell-sky</code> folder.</p>
+<p>In the <code>sky-shell.c</code> file, the <code>PROCESS_THREAD(sky_shell_process, ev, data)</code> code is shown as follows:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">PROCESS_THREAD(sky_shell_process, ev, data)</span><br><span class="line">&#123;</span><br><span class="line">  PROCESS_BEGIN();</span><br><span class="line"> <span class="meta">#<span class="keyword">if</span> WITH_PERIODIC_DEBUG</span></span><br><span class="line">  ctimer_set(&amp;debug_timer, <span class="number">20</span> * CLOCK_SECOND, periodic_debug, <span class="literal">NULL</span>);</span><br><span class="line"> <span class="meta">#<span class="keyword">endif</span> <span class="comment">/* WITH_PERIODIC_DEBUG */</span></span></span><br><span class="line"> serial_shell_init();</span><br><span class="line">  shell_blink_init();</span><br><span class="line">  <span class="comment">/* shell_file_init();</span></span><br><span class="line"><span class="comment">  shell_coffee_init();*/</span></span><br><span class="line">  <span class="comment">/* shell_download_init();*/</span></span><br><span class="line">  shell_rime_sendcmd_init();</span><br><span class="line">  <span class="comment">/* shell_ps_init();*/</span></span><br><span class="line">  shell_reboot_init();</span><br><span class="line">  shell_rime_init();</span><br><span class="line">  shell_rime_netcmd_init();</span><br><span class="line">  <span class="comment">/* shell_rime_ping_init();</span></span><br><span class="line"><span class="comment">  shell_rime_debug_init();</span></span><br><span class="line"><span class="comment">  shell_rime_debug_runicast_init();*/</span></span><br><span class="line">  <span class="comment">/* shell_rime_sniff_init();*/</span></span><br><span class="line">  shell_sky_init();</span><br><span class="line">  shell_power_init();</span><br><span class="line">  shell_powertrace_init();</span><br><span class="line">  <span class="comment">/* shell_base64_init();*/</span></span><br><span class="line">  shell_text_init();</span><br><span class="line">  shell_time_init();</span><br><span class="line">  <span class="comment">/* shell_sendtest_init();*/</span></span><br><span class="line">  shell_collect_view_init();</span><br><span class="line"> <span class="meta">#<span class="keyword">if</span> DEBUG_SNIFFERS</span></span><br><span class="line">  rime_sniffer_add(&amp;s);</span><br><span class="line"> <span class="meta">#<span class="keyword">endif</span> <span class="comment">/* DEBUG_SNIFFERS */</span></span></span><br><span class="line">  PROCESS_END();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Notice: We only use some essential shells due to the Contiki mote’s resource limitation.</strong></p>
+<p>Other shell API are remarked as comments. Now, compile and upload this program into Contiki mote. For instance, I use the Contiki-NG mote–based Sky. Open Terminal and navigate to the <code>&lt;Contiki-root&gt;examples/shell-sky</code> folder. We can type these commands to compile and upload the program to the Contiki-NG mote with sky as target:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make TARGET=sky</span><br><span class="line">make TARGET=sky savetarget</span><br><span class="line">make shell-sky.upload</span><br></pre></td></tr></table></figure>
+
+<p>After it has completed, we can monitor our Contiki mote. We can type this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make login</span><br></pre></td></tr></table></figure>
+
+<p>Then, reset our Contiki mote in order to use the Contiki shell. If it succeeds, we should see the Contiki shell terminal as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./example-shell.native</span><br><span class="line">Contiki-4.x-xxx started</span><br><span class="line">Rime started with address xxx MAC nullmac RDC nullrdc NETWORK Rime</span><br><span class="line">xxx: Contiki&gt;</span><br></pre></td></tr></table></figure>
+
+<p>From the Contiki shell, we can test it using the commands help and echo. We can type these commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Contiki&gt; <span class="built_in">help</span></span><br><span class="line">Contiki&gt; <span class="built_in">echo</span> hello world!</span><br></pre></td></tr></table></figure>
+
+<p>If we want to exit from the Contiki shell, we can type exit. If we get problems quitting from the Contiki shell, we can press <code>CTRL+C</code> to enforce the exit.</p>
+<h2 id="Customizing-Contiki-Shell"><a href="#Customizing-Contiki-Shell" class="headerlink" title="Customizing Contiki Shell"></a>Customizing Contiki Shell</h2><p>In some cases we may need to customize the Contiki shell to fit our problems. The thing that we should be aware of is our space and resource usage while implementing a Contiki shell.</p>
+<p>In the previous section, we learned how to access Contiki and Contiki shells. Now, we will build our own Contiki shell API. For this simple demo, we will develop a Contiki shell with an addition math operation. This API will receive two number parameters. These number parameters will be added and then sent back as the Contiki shell output.</p>
+<p>To build our own Contiki shell, we can add our shell objects to the <code>&lt;Contiki-root&gt;/apps/shell</code> folder. For our scenario, we add two files, <code>shell-math.c</code> and <code>shell-math.h</code>.</p>
+<p>There are two steps to building a custom Contiki shell.</p>
+<ul>
+<li><p>First, we create an object file (<code>*.c</code>) in which to declare all Contiki shell implementations. We declare the Contiki shell API using <code>SHELL_COMMAND()</code>.</p>
+</li>
+<li><p>Then, we implement the shell API on a process by declaring it in <code>PROCESS()</code>.</p>
+</li>
+<li><p>Last, we register and initialize our Contiki shell API by calling the <code>shell_register_command()</code> function. This function will be called on the <code>shell_math_init()</code> function. The Contiki program that will use this shell should call <code>shell_math_init()</code> function to access the shell API.</p>
+</li>
+</ul>
+<p>For implementation, we start to write the program in the <code>shell-math.c</code> file. We receive two number input parameters. Then, we perform the addition operation. The following is the complete program for the <code>shell- math.c</code> file:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;contiki.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;shell.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br><span class="line">PROCESS(shell_math_process, <span class="string">&quot;math&quot;</span>);</span><br><span class="line">SHELL_COMMAND(math_command,</span><br><span class="line">     <span class="string">&quot;math&quot;</span>,</span><br><span class="line">     <span class="string">&quot;math: math number1 number2&quot;</span>,</span><br><span class="line">     &amp;shell_math_process);</span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br><span class="line">PROCESS_THREAD(shell_math_process, ev, data)</span><br><span class="line">&#123;</span><br><span class="line"> <span class="type">char</span> *numbers;</span><br><span class="line">  <span class="type">int</span> n1 = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> n2 = <span class="number">0</span>;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">32</span>];</span><br><span class="line">  PROCESS_BEGIN();</span><br><span class="line">  numbers = data;</span><br><span class="line">  <span class="keyword">if</span>(numbers == <span class="literal">NULL</span> || <span class="built_in">strlen</span>(numbers) == <span class="number">0</span>) </span><br><span class="line"> &#123;</span><br><span class="line">   shell_output_str(&amp;math_command,</span><br><span class="line">       <span class="string">&quot;math number1 number2: number must be given&quot;</span>,</span><br><span class="line">       <span class="string">&quot;&quot;</span>);</span><br><span class="line">   PROCESS_EXIT();</span><br><span class="line">  &#125;</span><br><span class="line"> <span class="type">char</span> * pch;</span><br><span class="line">  pch = strtok (numbers,<span class="string">&quot; &quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (pch != <span class="literal">NULL</span>)</span><br><span class="line">  &#123;</span><br><span class="line">   n1 = atoi(pch);</span><br><span class="line">   pch = strtok (<span class="literal">NULL</span>, <span class="string">&quot; &quot;</span>);</span><br><span class="line">   <span class="keyword">if</span> (pch != <span class="literal">NULL</span>)</span><br><span class="line">   &#123;</span><br><span class="line">   n2 = atoi(pch);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">   shell_output_str(&amp;math_command,</span><br><span class="line">        <span class="string">&quot;math number1 number2: number must be given&quot;</span>,</span><br><span class="line">        <span class="string">&quot;&quot;</span>);</span><br><span class="line">   PROCESS_EXIT();</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">   shell_output_str(&amp;math_command,</span><br><span class="line">       <span class="string">&quot;math number1 number2: number must be given&quot;</span>,</span><br><span class="line">       <span class="string">&quot;&quot;</span>);</span><br><span class="line">   PROCESS_EXIT();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">int</span> s = n1 + n2;</span><br><span class="line">  <span class="built_in">sprintf</span>(buf, <span class="string">&quot;%d + %d= %d&quot;</span>, n1, n2, s);</span><br><span class="line">  shell_output_str(&amp;math_command, buf, <span class="string">&quot;&quot;</span>);</span><br><span class="line">  PROCESS_END();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">shell_math_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  shell_register_command(&amp;math_command);</span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br></pre></td></tr></table></figure>
+
+<p>Input data from the user can be obtained from the data variables in the function parameters. We parse the data into two number variables.</p>
+<p>Next, we write a header file, called shell-math.h, for our Contiki shell API. We only declare our function, <code>shell_math_init()</code>. The following is the complete program for the <code>shell-math.h</code> file:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SHELL_MATH_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SHELL_MATH_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;shell.h&quot;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">shell_math_init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Save all the files. Now, we should configure <code>Makefile</code> to include these files in compilation. We can open <code>Makefile.shell</code> in the same folder with the shell API files. Open this file and add our shell files. We can see them in the codes here:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">shell_src = shell.c shell-reboot.c shell-vars.c shell-ps.c \</span><br><span class="line"> shell-blink.c shell-text.c shell-time.c \</span><br><span class="line"> shell-file.c shell-run.c \</span><br><span class="line"> shell-coffee.c \</span><br><span class="line"> shell-power.c \</span><br><span class="line"> shell-base64.c \</span><br><span class="line"> shell-memdebug.c \</span><br><span class="line"> shell-math.c \</span><br><span class="line"> shell-powertrace.c shell-crc.c</span><br><span class="line">shell_dsc = shell-dsc.c</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>Our Contiki shell API is now ready for compiling. The next step is to develop a Contiki application to use our Contiki shell API, math shell. We create a folder, called <code>shell-math-demo</code>. Then, we create two files:</p>
+<ul>
+<li><p><code>shell-math-demo.c</code></p>
+<p>The shell-math-demo.c file consists of a program to use the Contiki math shell API. The following is the complete program in the <code>shell-math-demo.c</code> file:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;contiki.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;shell.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;serial-shell.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;collect-view.h&quot;</span></span></span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br><span class="line">PROCESS(sky_shell_process, <span class="string">&quot;Sky Contiki shell&quot;</span>);</span><br><span class="line">AUTOSTART_PROCESSES(&amp;sky_shell_process);</span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> WITH_PERIODIC_DEBUG 0</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> WITH_PERIODIC_DEBUG</span></span><br><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">ctimer</span> <span class="title">debug_timer</span>;</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">periodic_debug</span><span class="params">(<span class="type">void</span> *ptr)</span></span><br><span class="line">&#123;</span><br><span class="line"> ctimer_set(&amp;debug_timer, <span class="number">20</span> * CLOCK_SECOND, periodic_debug, <span class="literal">NULL</span>);</span><br><span class="line">collect_print_stats();</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* WITH_PERIODIC_DEBUG */</span></span></span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br><span class="line">PROCESS_THREAD(sky_shell_process, ev, data)</span><br><span class="line">&#123;</span><br><span class="line"> PROCESS_BEGIN();</span><br><span class="line"> <span class="meta">#<span class="keyword">if</span> WITH_PERIODIC_DEBUG</span></span><br><span class="line"> ctimer_set(&amp;debug_timer, <span class="number">20</span> * CLOCK_SECOND, periodic_debug, <span class="literal">NULL</span>);</span><br><span class="line"> <span class="meta">#<span class="keyword">endif</span> <span class="comment">/* WITH_PERIODIC_DEBUG */</span></span></span><br><span class="line"> serial_shell_init();</span><br><span class="line"> shell_blink_init();</span><br><span class="line"> shell_reboot_init();</span><br><span class="line"> shell_sky_init();</span><br><span class="line"> shell_power_init();</span><br><span class="line"> shell_powertrace_init();</span><br><span class="line"> shell_text_init();</span><br><span class="line"> shell_time_init();</span><br><span class="line"> shell_collect_view_init();</span><br><span class="line"> shell_math_init();</span><br><span class="line"> PROCESS_END();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*-----------------------------------------------------------*/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Makefile</code></p>
+<p>Furthermore, we write scripts in the <code>Makefile</code>. We include Contiki and the project path. We write these complete scripts as follows:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CONTIKI_PROJECT = shell-math-demo</span><br><span class="line">all: $(CONTIKI_PROJECT)</span><br><span class="line">APPS = serial-shell powertrace collect-view</span><br><span class="line">CONTIKI = ../..</span><br><span class="line">CONTIKI_WITH_RIME = <span class="number">1</span></span><br><span class="line">include $(CONTIKI)/Makefile.include</span><br></pre></td></tr></table></figure>
+
+<p><code>CONTIKI_WITH_RIME = 1</code> is used to enable the RIME protocol since Contiki shell uses it on some shell commands. We also supply a testing configuration by including this <code>Makefile</code>, <code>/home/user/nes/testbed-scripts/Makefile.include</code>, because some shell commands need it.</p>
+</li>
+</ul>
+<p>Save all files.</p>
+<p>Now, we compile our program, shell-math-demo. Open Terminal and navigate to the shell-math-demo folder. Type these commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make TARGET=sky</span><br><span class="line">make shell-math-demo.sky.upload TARGET=sky</span><br></pre></td></tr></table></figure>
+
+<p>After our program is uploaded to Contiki mote, we can monitor the mote. We can type this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make login</span><br></pre></td></tr></table></figure>
+
+<p>If it succeeds, we should see the Contiki shell. Now, we can call our Contiki shell API. We can type this command in the Contiki shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Contiki&gt; math 10 5</span><br></pre></td></tr></table></figure>
+
+<p>This shell will call our Contiki shell API. Value inputs $10$ and $5$ will be executed to perform the addition operation.</p>
+<h3 id="Custom-Contiki-NG-Shell"><a href="#Custom-Contiki-NG-Shell" class="headerlink" title="Custom Contiki-NG Shell"></a>Custom Contiki-NG Shell</h3><p>Contiki-NG applies shell with a different approach. To customize a shell, we can add our shell command to the <code>shell-commands.c</code> file. We can find that file in the <code>&lt;contiki-ng-root&gt;/os/services/shell</code> folder.</p>
+<p>We add a new shell command to the <code>shell-commands.c</code> file. We define a “hello” command. We print the message “Hi, this is a custom shell” to Terminal. Write this code:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="title function_">PT_THREAD</span><span class="params">(cmd_hello(<span class="keyword">struct</span> pt *pt, shell_output_func output, <span class="type">char</span> *args))</span></span><br><span class="line">&#123;</span><br><span class="line"> PT_BEGIN(pt);</span><br><span class="line">  SHELL_OUTPUT(output, <span class="string">&quot;Hi, this custom shell\n&quot;</span>)</span><br><span class="line">  PT_END(pt);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Next, we also register our shell in the <code>shell_command_t shell_commands struct</code>. We define the shell name, method call, and description. For instance, we can see the code for our custom NG-shell here:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">shell_command_t</span> <span class="title">shell_commands</span>[] =</span> &#123;</span><br><span class="line"> &#123; <span class="string">&quot;hello&quot;</span>, cmd_hello, <span class="string">&quot;&#x27;&gt; hello&#x27;: say hello&quot;</span> &#125;,</span><br><span class="line"> &#123; <span class="string">&quot;help&quot;</span>, cmd_help, <span class="string">&quot;&#x27;&gt; help&#x27;: Shows this help&quot;</span> &#125;,</span><br><span class="line"> &#123; <span class="string">&quot;reboot&quot;</span>, cmd_reboot, <span class="string">&quot;&#x27;&gt; reboot&#x27;: Reboot the board by watchdog_reboot()&quot;</span> &#125;,</span><br><span class="line"> ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Save all files.</p>
+<p>Now, we can use the NG shell on our project. For instance, we can use a hello-world project and enable the Contiki-NG shell. We only enable shell service on <code>Makefile</code>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MODULES += os/services/shell</span><br></pre></td></tr></table></figure>
+
+<p>After that, we compile and flash this program onto the Contiki-NG mote. We can now remote into the Contiki mote Terminal using <code>mote login</code>. For instance, I remote access my TI LaunchPad CC2650 using this command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make login TARGET=srf06-cc26xx PORT=/dev/ttyUSB0</span><br></pre></td></tr></table></figure>
+
+<p>We should change <code>TARGET</code> and <code>PORT</code> to reflect our Contiki board. Please press the Reset button on the Contiki mote if you do not see anything in Terminal. Now, you can test your own shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; <span class="built_in">help</span></span><br><span class="line">shell&gt; hello</span><br></pre></td></tr></table></figure>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/08/14/13%20-%20Communication%20among%20Contiki%20Motes/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">13 - Communication among Contiki Motes</h2>
+        </a>
+      
+      <div class="card-text--row">Newer</div>
+    </div>
+  </article>
+</div>
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/08/12/11%20-%20Communication%20models%20for%20Contiki-NG/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">11 - Communication models for Contiki-NG</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+    
+      <h2>Leo</h2>
+    
+    
+      <p>烟雨化桥常相念，塞上门楼空许约。</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>24</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        3
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        4
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/BLOG/">
+            BLOG (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/WSN/">
+            WSN (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/SSL/">
+            SSL (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/Hexo/" style="font-size: 10px;" class="tags-cloud-0">Hexo</a> <a href="/tags/Review/" style="font-size: 10px;" class="tags-cloud-0">Review</a> <a href="/tags/SSL/" style="font-size: 10px;" class="tags-cloud-0">SSL</a> <a href="/tags/WSN/" style="font-size: 20px;" class="tags-cloud-10">WSN</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+        <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2024 <a href="/" target="_blank">Sihao(Leo) Li</a></p>
+
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z">
+      </path>
+      <path
+        d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z">
+      </path>
+      <path
+        d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z">
+      </path>
+    </svg>
+  </div>
+
+  
+    <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+<!-- copy button  -->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+
+<!-- https://clipboardjs.com/ -->
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+      
+        <!-- 尾部用户自定义相关内容 -->
+</body>
+
+</html>
